@@ -36,3 +36,4 @@ proc update_fileset {src_dir fileset} {
 }
 
 update_fileset ./src sources_1
+update_fileset ./tb sim_1

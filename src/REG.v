@@ -1,3 +1,5 @@
+`timescale 1ns/1ns
+
 module REG(q, d, Clk, Rst);
 
     parameter   DATAWIDTH = 32;

@@ -23,3 +23,11 @@ Then, clone the repo with the following command:
 `git clone <url>`
 
 where \<url\> is the URL of the git repo.
+
+All development should be done in a separate branch. To create a separate branch off master. Start by checking out master (If you just cloned the repo, master will be checked out by default). Master can be checked out using the following command:
+
+`git checkout master`
+
+Before branching, update master using the following command:
+
+`git pull`

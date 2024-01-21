@@ -1,3 +1,5 @@
+`timescale 1ns/1ns
+
 module DIV(a,b,qout);
 
     parameter DATAWIDTH = 32;

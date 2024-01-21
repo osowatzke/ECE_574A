@@ -64,5 +64,4 @@ If this is the first time you are pushing to your branch, you will want to issue
 
 where \<branch_name\> is the name of the branch you wish to commit to. Don't worry if you don't issue the right push command, git will give you the right command.
 
-Once you have finished all development on your branch, you can create a pull request. Once your pull request has been approved, it will automatically be merged with master.
-
+Once you have finished all development on your branch, you can create a pull request. Once your pull request has been approved, it will automatically be merged with main.

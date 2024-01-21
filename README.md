@@ -24,11 +24,11 @@ Then, clone the repo with the following command:
 
 where \<url\> is the URL of the git repo.
 
-All development should be done in a separate branch. To create a separate branch off master. Start by checking out master (If you just cloned the repo, master will be checked out by default). Master can be checked out using the following command:
+All development should be done in a separate branch. To create a separate branch off main. Start by checking out main (If you just cloned the repo, main will be checked out by default). Main can be checked out using the following command:
 
-`git checkout master`
+`git checkout main`
 
-Before branching, update master using the following command:
+Before branching, update main using the following command:
 
 `git pull`
 
@@ -64,5 +64,4 @@ If this is the first time you are pushing to your branch, you will want to issue
 
 where \<branch_name\> is the name of the branch you wish to commit to. Don't worry if you don't issue the right push command, git will give you the right command.
 
-Once you have finished all development on your branch, you can create a pull request. Once your pull request has been approved, it will automatically be merged with master.
-
+Once you have finished all development on your branch, you can create a pull request. Once your pull request has been approved, it will automatically be merged with main.

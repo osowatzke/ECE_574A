@@ -52,7 +52,7 @@ where \<filename\> is the name of the file you wish to add. You can also add all
 
 Once you have added all the relevant files, you will want to issue the following command:
 
-`git commit -m "<commit_message>"
+`git commit -m "<commit_message>`
 
 where \<commit_message\> is a very short description of your commit. Then, push your branch to the repo with the following command:
 

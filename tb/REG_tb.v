@@ -6,38 +6,34 @@ module REG_tb();
     localparam RESET_TIME = 100;
     localparam DATAWIDTH  = 32;
    
-    reg Clk;
-    reg Rst;
-    reg valid;
-    reg err;
+    wire clk;
+    wire rst;
+    reg  valid;
+    reg  err;
     
-    reg  [DATAWIDTH-1:0] d;
+    wire [DATAWIDTH-1:0] d;
     wire [DATAWIDTH-1:0] q;
     reg  [DATAWIDTH-1:0] q_ref;
 
     initial begin
-        Clk             <= 0;
-        Rst             <= 1;
-        valid           <= 0;
-        err             <= 0;
-        #RESET_TIME Rst <= 0;
+        valid <= 0;
+        err   <= 0;
     end
         
-    always
-        #(CLK_PERIOD/2) Clk <= ~Clk;
+    clk_gen #(.CLK_PERIOD(CLK_PERIOD)) clk_gen_i(clk);
     
-    REG #(.DATAWIDTH(DATAWIDTH)) REG_i(q,d,Clk,Rst);
+    rst_gen #(.RESET_TIME(RESET_TIME)) rst_gen_i(rst);
     
-    always @(posedge Clk) begin
+    inc_gen #(.DATAWIDTH(DATAWIDTH)) inc_gen_i(d,clk,rst);
+    
+    REG #(.DATAWIDTH(DATAWIDTH)) REG_i(q,d,clk,rst);
+    
+    always @(posedge clk) begin
         valid       <= 1;
-        if (Rst == 1) begin
-            d       <= 0;
+        if (rst == 1)
             q_ref   <= 0;
-        end
-        else begin
-            d       <= d + 1'b1;
+        else
             q_ref   <= d;
-        end
         if ((valid == 1) && (q != q_ref)) begin
             err     <= 1;
             $error("Error Detected at Time %t: Meas = %d, Meas=%d", $realtime, q, q_ref);

@@ -16,10 +16,10 @@ Git can be downloaded using the following link: [https://git-scm.com/downloads](
 
 `cd <dirname>`
 
-where <dirname> is the directory you wish to clone the repo into.
+where \<dirname\> is the directory you wish to clone the repo into.
 
 Then, clone the repo with the following command:
 
 `git clone <url>`
 
-where <url> is the URL of the git repo.
+where \<url\> is the URL of the git repo.

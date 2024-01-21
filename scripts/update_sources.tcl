@@ -1,22 +1,46 @@
+# Procedures updates fileset.
+#
+# Inputs:
+#   src_dir     source directory
+#   fileset     fileset associated with source directory
+#
 proc update_fileset {src_dir fileset} {
-    set src_files {}
-    set src_files [file normalize [glob  -nocomplain "${src_dir}/*"]]
-    set prj_files [file normalize [get_files -of_objects [get_filesets $fileset] -quiet]]
+
+    # Get contents of source directory
+    set src_files [glob  -nocomplain "${src_dir}/*"]
+
+    # Ensure all paths are absolute paths
+    for {set i 0} {$i < [llength $src_files]} {incr i} {
+        lset src_files $i [file normalize [lindex $src_files $i]]
+    }
+
+    # Get files in fileset
+    set prj_files [get_files -of_objects [get_filesets $fileset] -quiet]
+
+    # Ensure all paths are absolute paths
+    for {set i 0} {$i < [llength $prj_files]} {incr i} {
+        lset prj_files $i [file normalize [lindex $prj_files $i]]
+    }
+
+    # Add files not yet in fileset
     if {[llength $src_files]} {
         foreach src_file $src_files {
             set match 0
             if {[llength $prj_files]} {
-                foreach prf_file $prj_files {
+                foreach prj_file $prj_files {
                     if {[string equal $prj_file $src_file]} {
                         set match 1
                     }
                 }
             }
             if {$match == 0} {
+                puts $src_file
                 add_files -fileset $fileset $src_file
             }
         }
     }
+
+    # Remove files no longer in source directory
     if {[llength $prj_files]} {
         foreach prj_file $prj_files {
             set match 0
@@ -32,8 +56,10 @@ proc update_fileset {src_dir fileset} {
             }
         }
     }
-    update_compile_order -fileset $fileset
 }
 
+# Add sources
 update_fileset ./src sources_1
+
+# Add testbenches
 update_fileset ./tb sim_1

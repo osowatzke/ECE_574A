@@ -12,7 +12,7 @@ Once the project has been created, sources included in the project will not be a
 
 ### Git Commands
 
-Git can be downloaded using the following link: [link](https://git-scm.com/downloads). Once you have git installed, open git bash. Within git bash, navigate to the directory you wish to clone the repo into. This can be done using the following command.
+Git can be downloaded using the following link: [https://git-scm.com/downloads](https://git-scm.com/downloads). Once you have git installed, open git bash. Within git bash, navigate to the directory you wish to clone the repo into. This can be done using the following command.
 
 `cd <dirname>`
 

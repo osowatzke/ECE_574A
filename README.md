@@ -34,7 +34,7 @@ Before branching, update master using the following command:
 
 Then, checkout a new branch with the following command:
 
-`git checkout -b <branch>'
+`git checkout -b <branch>`
 
 where \<branch\> is the branch you want to checkout. You can name your branch as desired. One possible naming convention for branches is issue/<issue_number>_<issue_description>, where <issue_number> and <issue_description> refer to the issue you are trying to resolve.
 

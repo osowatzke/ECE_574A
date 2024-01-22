@@ -3,9 +3,9 @@
 module INC(a,d);
 
     parameter DATAWIDTH = 32;
-    input unsigned [DATAWIDTH-1:0] a;
+    input [DATAWIDTH-1:0] a;
 
-    output reg unsigned [DATAWIDTH-1:0] d;
+    output reg [DATAWIDTH-1:0] d;
 
     always @(a) begin
         d <= a-1;

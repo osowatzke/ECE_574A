@@ -7,8 +7,8 @@ module REG(q, d, Clk, Rst);
     input Clk;
     input Rst;
 
-    input unsigned [DATAWIDTH-1:0] d;
-    output reg unsigned [DATAWIDTH-1:0] q;
+    input [DATAWIDTH-1:0] d;
+    output reg [DATAWIDTH-1:0] q;
 
     always @(posedge Clk) begin
         if (Rst == 1)

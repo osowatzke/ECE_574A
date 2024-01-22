@@ -4,11 +4,11 @@ module REG(q, d, Clk, Rst);
 
     parameter   DATAWIDTH = 32;
 
-    input  Clk;
-    input  Rst;
+    input Clk;
+    input Rst;
 
-    input      [DATAWIDTH-1:0] d;
-    output reg [DATAWIDTH-1:0] q;
+    input unsigned [DATAWIDTH-1:0] d;
+    output reg unsigned [DATAWIDTH-1:0] q;
 
     always @(posedge Clk) begin
         if (Rst == 1)

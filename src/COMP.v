@@ -3,8 +3,8 @@
 module COMP(a,b,gt,lt,eq);
 
     parameter DATAWIDTH = 32;
-    input unsigned [DATAWIDTH-1:0] a;
-    input unsigned [DATAWIDTH-1:0] b;
+    input [DATAWIDTH-1:0] a;
+    input [DATAWIDTH-1:0] b;
 
     output gt,lt,eq;
 

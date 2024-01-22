@@ -3,10 +3,10 @@
 module MUL(a,b,prod);
 
     parameter DATAWIDTH = 32;
-    input signed [DATAWIDTH-1:0] a;
-    input signed [DATAWIDTH-1:0] b;
+    input unsigned [DATAWIDTH-1:0] a;
+    input unsigned [DATAWIDTH-1:0] b;
 
-    output reg signed [DATAWIDTH-1:0] prod;
+    output reg unsigned [DATAWIDTH-1:0] prod;
 
     always @(a,b) begin
         prod <= a*b;

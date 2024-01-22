@@ -3,11 +3,11 @@
 module MUX2x1(a,b,sel,d);
 
     parameter DATAWIDTH = 32;
-    input signed [DATAWIDTH-1:0] a;
-    input signed [DATAWIDTH-1:0] b;
+    input unsigned [DATAWIDTH-1:0] a;
+    input unsigned [DATAWIDTH-1:0] b;
     input sel;
 
-    output reg signed [DATAWIDTH-1:0] d;
+    output reg unsigned [DATAWIDTH-1:0] d;
 
     always @(a,b,sel) begin
         if (sel) begin

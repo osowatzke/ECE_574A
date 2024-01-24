@@ -36,7 +36,7 @@ A python convenience function has been created to estimated the critical path of
 
 `python ./scripts/estimate_critical_path.py ./circuits/<circuit_filename>`
 
-where `\<circuit_filename\>` is the name of the behavioral netlist circuit.
+where \<circuit_filename\> is the name of the behavioral netlist circuit.
 
 ### Git Commands
 

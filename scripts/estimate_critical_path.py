@@ -12,10 +12,11 @@ class CriticalPaths:
         f.close()
         self.time_ns = dict()
         for line in lines:
-            x = re.match('^(\w+)\s+:\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)',line)
-            self.time_ns[x.groups(1)] = [];
-            for i in range(2,7):
-                self.time_ns[x.groups(1)].append(double(x.groups(i)))
+            x = re.search(r'^(\w+)\s+:\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s*$',line)
+            if x is not None:
+                self.time_ns[x.group(1)] = [];
+                for i in range(2,7):
+                    self.time_ns[x.group(1)].append(float(x.group(i)))
         
 class Component:
     def __init__(self, name=None, width=None, inputs=[], outputs=[]):
@@ -57,16 +58,15 @@ class NetlistParser:
         self.wires = None
         self.components = None
         self.paths = None
+        self.critical_path = None
+        self.critical_path_ns = None
         f = open(netlist,"r")
         self.lines = f.readlines()
         f.close()
         self.parse_wires()
         self.parse_components()
         self.get_paths()
-        for path in self.paths:
-            for item in path:
-                print(item.name, end=' ')
-            print()
+        self.get_critical_path()
                 
     def parse_wires(self):
         self.wires = []
@@ -138,48 +138,38 @@ class NetlistParser:
                 paths.extend(next_wire_paths)
             return paths
             
-    # def get_critical_path(self):
-        # for path in self.paths():
-            
-        
-# def get_inputs(lines):
-    # inputs 
-    # input_lines = re.findall(r'(?:^|\s)input([^;]+);', file_data);
-    # inputs = []
-    # for line in input_lines:
-        # inputs.extend(re.findall(r'(?:\s*(\w+)\s*(?:,|$))',line))
-    # return inputs
-    
-# def get_outputs(file_data):
-    # output_lines = re.findall(r'(?:^|\s)output([^;]+);', file_data);
-    # outputs = []
-    # for line in output_lines:
-        # outputs.extend(re.findall(r'(?:\s*(\w+)\s*(?:,|$))',line))
-    # return outputs
-    
-# def get_component(file_data, name):
-    # component_lines = re.findall(rf'(?:^|\s){name}([^;]+);', file_data);
-    # print(component_lines)
-    # components = []
-    # for line in component_lines:
-        # match = re.match(r'\s*#\((.*)\)\s+\w+\s*\((.*)\)',line)
-        # print(match.groups())
-# def get_wires(file_data):
-    # output_lines = re.findall(r'(?:^|\s)output([^;]+);', file_data);
-    # outputs = []
-    # for line in output_lines:
-        # outputs.extend(re.findall(r'(?:\s*(\w+)\s*(?:,|$))',line))
-    # return outputs
-    
-# def strip_comments(lines):
-    # for line in lines:
-        # line = re.findall(r'')
+    def get_critical_path(self):
+        self.critical_path = None
+        self.critical_path_ns = 0
+        component_critical_paths_ns = CriticalPaths().time_ns;
+        for (idx,path) in enumerate(self.paths):
+            path_latency = 0
+            for item in path:
+                if item.name in component_critical_paths_ns.keys():
+                    if item.width == 2:
+                        path_latency = path_latency + component_critical_paths_ns[item.name][0]
+                    elif item.width == 8:
+                        path_latency = path_latency + component_critical_paths_ns[item.name][1]
+                    elif item.width == 16:
+                        path_latency = path_latency + component_critical_paths_ns[item.name][2]
+                    elif item.width == 32:
+                        path_latency = path_latency + component_critical_paths_ns[item.name][3]
+                    elif item.width == 64:
+                        path_latency = path_latency + component_critical_paths_ns[item.name][4]
+            if path_latency > self.critical_path_ns:
+                self.critical_path_ns = path_latency
+                self.critical_path = path                
+     
+    def display_critical_path(self):
+        for (idx,item) in enumerate(self.critical_path):
+            print(item.name, end = '')
+            if idx < (len(self.critical_path)-1):
+                print(' -> ', end = '')
+            else:
+                print()
         
 if __name__ == "__main__":
-    f = NetlistParser("../circuits/474a_circuit1.txt")
-    print(CriticalPaths().time_ns)
-    # lines = f.readlines()
-    # f.close()
-    # print(get_inputs(file_data))
-    # get_component(file_data,'ADD')
-    #get_inputs("input a, b, c;");
+    parser = NetlistParser("../circuits/474a_circuit1.txt")
+    print('\nCritical Path (ns): %.3f\n' % parser.critical_path_ns)
+    print('Critical Path: ',end='')
+    parser.display_critical_path()

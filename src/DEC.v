@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module INC(a,d);
+module DEC(a,d);
 
     parameter DATAWIDTH = 32;
     input [DATAWIDTH-1:0] a;

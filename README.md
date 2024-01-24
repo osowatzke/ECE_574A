@@ -30,6 +30,14 @@ Note that the output will be printed to the terminal by default. It can be route
 
 `source ../scripts/get_critical_paths.tcl > fileName.txt`
 
+### Estimating Critical Path of Behavioral Netlists
+
+A python convenience function has been created to estimated the critical path of a behavioral netlist. It requires critical path data from each of the subcomponents. It can be called as follows
+
+`python ./scripts/estimate_critical_path.py ./circuits/<circuit_filename>`
+
+where `\<circuit_filename\>` is the name of the behavioral netlist circuit.
+
 ### Git Commands
 
 Git can be downloaded using the following link: [https://git-scm.com/downloads](https://git-scm.com/downloads). Once you have git installed, open git bash. Within git bash, navigate to the directory you wish to clone the repo into. This can be done using the following command.

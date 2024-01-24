@@ -1,15 +1,14 @@
 `timescale 1ns/1ns
 
-module MOD(a, b, rem);
+module SHL(a,sh_amt,d);
 
     parameter DATAWIDTH = 32;
-
     input [DATAWIDTH-1:0] a;
-    input [DATAWIDTH-1:0] b;
-    
-    output reg [DATAWIDTH-1:0] rem;
-    
+    input sh_amt;
+
+    output reg [DATAWIDTH-1:0] d;
+
     always @(a,b) begin
-        rem <= a % b;
+        d <= a << sh_amt;
     end
 endmodule

@@ -1,15 +1,14 @@
 `timescale 1ns/1ns
 
-module MOD(a, b, rem);
+module MUL(a,b,prod);
 
     parameter DATAWIDTH = 32;
-
     input [DATAWIDTH-1:0] a;
     input [DATAWIDTH-1:0] b;
-    
-    output reg [DATAWIDTH-1:0] rem;
-    
+
+    output reg [DATAWIDTH-1:0] prod;
+
     always @(a,b) begin
-        rem <= a % b;
+        prod <= a*b;
     end
 endmodule

@@ -10,7 +10,7 @@ proc compute_critical_path {module data_width} {
     return $critical_path
 }
 
-set modules {"REG" "DIV"}
+set modules {"REG" "ADD" "SUB" "MULT" "COMP" "MUX2x1" "SHR" "SHL" "DIV" "MOD" "INC" "DEC"}
 set data_widths {2 8 16 32 64}
 set critical_paths ""
 foreach module $modules {

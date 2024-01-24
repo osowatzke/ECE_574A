@@ -1,7 +1,22 @@
 import re
 from enum import Enum
 import copy
+import os
 
+class CriticalPaths:
+    def __init__(self):
+        path_this_file = os.path.dirname(os.path.abspath(__file__))
+        critical_path_file = os.path.join(path_this_file,'..','outputs','DCPL_LAT.txt')
+        f = open(critical_path_file,'r')
+        lines = f.readlines()
+        f.close()
+        self.time_ns = dict()
+        for line in lines:
+            x = re.match('^(\w+)\s+:\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)',line)
+            self.time_ns[x.groups(1)] = [];
+            for i in range(2,7):
+                self.time_ns[x.groups(1)].append(double(x.groups(i)))
+        
 class Component:
     def __init__(self, name=None, width=None, inputs=[], outputs=[]):
         self.name = name
@@ -122,6 +137,10 @@ class NetlistParser:
                     next_wire_paths[idx].insert(0,wire)
                 paths.extend(next_wire_paths)
             return paths
+            
+    # def get_critical_path(self):
+        # for path in self.paths():
+            
         
 # def get_inputs(lines):
     # inputs 
@@ -158,6 +177,7 @@ class NetlistParser:
         
 if __name__ == "__main__":
     f = NetlistParser("../circuits/474a_circuit1.txt")
+    print(CriticalPaths().time_ns)
     # lines = f.readlines()
     # f.close()
     # print(get_inputs(file_data))

@@ -1,19 +1,20 @@
 import re
 from enum import Enum
+import copy
 
 class Component:
-    def __init__(self, name=None, width=None, inputs=None, outputs=None):
+    def __init__(self, name=None, width=None, inputs=[], outputs=[]):
         self.name = name
         self.width = width
-        self.inputs = inputs
-        self.outputs = outputs
+        self.inputs = copy.deepcopy(inputs)
+        self.outputs = copy.deepcopy(outputs)
         
 class Wire:
-    def __init__(self, name=None, width=None, inputs=None, outputs=None):
+    def __init__(self, name=None, width=None, inputs=[], outputs=[]):
         self.name = name
         self.width = width
-        self.inputs = inputs
-        self.outputs = outputs
+        self.inputs = copy.deepcopy(inputs)
+        self.outputs = copy.deepcopy(outputs)
         
 class NetlistParser:
 
@@ -40,13 +41,17 @@ class NetlistParser:
     def __init__(self, netlist):
         self.wires = None
         self.components = None
+        self.paths = None
         f = open(netlist,"r")
         self.lines = f.readlines()
         f.close()
         self.parse_wires()
         self.parse_components()
-        for component in self.components:
-            print(component.name)
+        self.get_paths()
+        for path in self.paths:
+            for item in path:
+                print(item.name, end=' ')
+            print()
                 
     def parse_wires(self):
         self.wires = []
@@ -72,25 +77,52 @@ class NetlistParser:
                 if x is not None:
                     inputs = []
                     width = 0
-                    component = Component(name=name, inputs=[], outputs=[])
+                    component = Component(name=name)
                     for (idx, port) in enumerate(self.__REGEX[name][1]):
                         wire = self.find_wire(x.group(idx + 1))
                         if (port == self.PortType.IN_DATA):
                             width = max(width, wire.width)
                             component.inputs.append(wire)
-                            wire.outputs = component
+                            wire.outputs.append(component)
                         elif (port == self.PortType.IN_CTRL):
                             component.inputs.append(wire)
-                            wire.outputs = component
+                            wire.outputs.append(component)
                         elif (port == self.PortType.OUT_DATA):
                             component.outputs.append(wire)
-                            wire.inputs = component
+                            wire.inputs.append(component)
                         elif (port == self.PortType.OUT_CTRL):
                             component.outputs.append(wire)
-                            wire.inputs = component
+                            wire.inputs.append(component)
                     component.width = width
                     self.components.append(component)
-                    
+    
+    def get_inputs(self):
+        inputs = []
+        for wire in self.wires:
+            if len(wire.inputs) == 0:
+                inputs.append(wire)
+        return inputs
+        
+    def get_paths(self, wire=None):
+        if wire is None:
+            self.paths = []
+            wires = self.get_inputs()
+            for wire in wires:
+                self.paths.extend(self.get_paths(wire))
+            return self.paths
+        elif len(wire.outputs) == 0:
+            return [[wire]]
+        else:
+            paths = []
+            for output in wire.outputs:
+                next_wire = output.outputs[0]
+                next_wire_paths = self.get_paths(next_wire)
+                for idx in range(len(next_wire_paths)):
+                    next_wire_paths[idx].insert(0,output)
+                    next_wire_paths[idx].insert(0,wire)
+                paths.extend(next_wire_paths)
+            return paths
+        
 # def get_inputs(lines):
     # inputs 
     # input_lines = re.findall(r'(?:^|\s)input([^;]+);', file_data);

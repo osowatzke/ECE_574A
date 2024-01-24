@@ -2,6 +2,7 @@ import re
 from enum import Enum
 import copy
 import os
+import sys
 
 class CriticalPaths:
     def __init__(self):
@@ -169,7 +170,7 @@ class NetlistParser:
                 print()
         
 if __name__ == "__main__":
-    parser = NetlistParser("../circuits/474a_circuit1.txt")
+    parser = NetlistParser(sys.argv[1])
     print('\nCritical Path (ns): %.3f\n' % parser.critical_path_ns)
     print('Critical Path: ',end='')
     parser.display_critical_path()

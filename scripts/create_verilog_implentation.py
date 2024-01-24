@@ -1,6 +1,21 @@
 import re
 
 class FileParser:
+
+    __PORT_DEF = {
+        'REG'    : {'d': 'width', 'q': 'width'},
+        'ADD'    : {'a': 'width', 'b': 'width', 'sum': 'width'},
+        'SUB'    : {'a': 'width', 'b': 'width', 'diff': 'width'},
+        'MUL'    : {'a': 'width', 'b': 'width', 'prod': 'width'},
+        'COMP'   : {'a': 'width', 'b': 'width', 'gt': 1, 'lt': 1, 'eq': 1},
+        'MUX2x1' : {'a': 'width', 'b': 'width', 'sel': 1, 'd': 'width'},
+        'SHR'    : {'a': 'width', 'sh_amt': 'b', 'd': 'width'},
+        'SHL'    : {'a': 'width', 'sh_amt': 'b', 'd': 'width'},
+        'DIV'    : {'a': 'width', 'b': 'width', 'qout': 'width'},
+        'MOD'    : {'a': 'width', 'b': 'width', 'rem': 'width'},
+        'INC'    : {'a': 'width', 'b': 'width'},
+        'DEC'    : {'a': 'width', 'b': 'width'}}
+        
     def __init__(self, filepath):
     
         # Create class properties with relevant information
@@ -265,7 +280,48 @@ class FileParser:
             if (self.wires[i]['name'] == name):
                 return self.wires[i]['width']
         return None
-    
+
+    def create_new_wires(self,name):
+        base_width = get_width(name)
+        widths = get_all_widths(name)
+        widths = widths.remove(base_width)
+        for width in widths:
+            self.wires.append({'width': width, 'name': f'{name}_{width}'})
+      
+    def replace_wires(self,name):
+        base_width = get_width(name)
+        for i in range(self.components):
+            component_name = self.components[i]['name']
+            ports = self.components[i]['ports'].keys()
+            for port in ports:
+                if port == name:
+                    port_width = self.__PORT_DEF[component_name][ports]
+                    if isinstance(port_width,str):
+                        port_width = self.components[i][port_width]
+                    new_width = True
+                    for width in widths:
+                        if (port_width == width):
+                            new_width = False
+                    if new_width:
+                        widths.append(port_width)
+                        
+    def get_all_widths(self,name):
+        widths = []
+        for i in range(self.components):
+            component_name = self.components[i]['name']
+            ports = self.components[i]['ports'].keys()
+            for port in ports:
+                if port == name:
+                    port_width = self.__PORT_DEF[component_name][ports]
+                    if isinstance(port_width,str):
+                        port_width = self.components[i][port_width]
+                    new_width = True
+                    for width in widths:
+                        if (port_width == width):
+                            new_width = False
+                    if new_width:
+                        widths.append(port_width)
+        
 class FileWriter:
     def __init__(self, filepath, module_name, parser):
         self.file = open(filepath, "w")

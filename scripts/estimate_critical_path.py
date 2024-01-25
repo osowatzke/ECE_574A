@@ -48,8 +48,8 @@ class NetlistParser:
         'MUL': [r'^\s*(\w+)\s*=\s*(\w+)\s*\*\s*(\w+)\s*$', [PortType.OUT_DATA, PortType.IN_DATA, PortType.IN_DATA]],
         'COMP':[ r'^\s*(\w+)\s*=\s*(\w+)\s*[>=<]\s*(\w+)\s*$', [PortType.OUT_CTRL, PortType.IN_DATA, PortType.IN_DATA]],
         'MUX2x1':[ r'^\s*(\w+)\s*=\s*(\w+)\s*\?\s*(\w+)\s*:\s*(\w+)\s*$', [PortType.OUT_DATA, PortType.IN_CTRL, PortType.IN_DATA, PortType.IN_DATA]],
-        'SHR': [r'^\s*(\w+)\s*=\s*(\w+)\s*>>\s*(\w+)\s*$', [PortType.OUT_CTRL, PortType.IN_DATA, PortType.IN_CTRL]],
-        'SHL': [r'^\s*(\w+)\s*=\s*(\w+)\s*<<\s*(\w+)\s*$', [PortType.OUT_CTRL, PortType.IN_DATA, PortType.IN_CTRL]],
+        'SHR': [r'^\s*(\w+)\s*=\s*(\w+)\s*>>\s*(\w+)\s*$', [PortType.OUT_CTRL, PortType.IN_DATA, PortType.IN_DATA]],
+        'SHL': [r'^\s*(\w+)\s*=\s*(\w+)\s*<<\s*(\w+)\s*$', [PortType.OUT_CTRL, PortType.IN_DATA, PortType.IN_DATA]],
         'DIV': [r'^\s*(\w+)\s*=\s*(\w+)\s*/\s*(\w+)\s*$', [PortType.OUT_DATA, PortType.IN_DATA, PortType.IN_DATA]],
         'MOD': [r'^\s*(\w+)\s*=\s*(\w+)\s*%\s*(\w+)\s*$', [PortType.OUT_DATA, PortType.IN_DATA, PortType.IN_DATA]],
         'INC': [r'^\s*(\w+)\s*=\s*(\w+)\s*+\s*1\s*$', [PortType.OUT_CTRL, PortType.IN_DATA]],
@@ -67,12 +67,13 @@ class NetlistParser:
         self.parse_wires()
         self.parse_components()
         self.get_paths()
+        self.divide_paths()
         self.get_critical_path()
                 
     def parse_wires(self):
         self.wires = []
         for line in self.lines:
-            x = re.search(r'\s*(?:input|output|wire)\s+(\w+)\s+((?:\s*(?:\w+)\s*(?:$|,))+)',line)
+            x = re.search(r'\s*(?:input|output|wire|register)\s+(\w+)\s+((?:\s*(?:\w+)\s*(?:$|,))+)',line)
             if x is not None:
                 width = int(x.group(1).replace("Int",""))
                 names = re.findall(r'(\w+)\s*(?:$|,)',x.group(2))
@@ -96,6 +97,8 @@ class NetlistParser:
                     component = Component(name=name)
                     for (idx, port) in enumerate(self.__REGEX[name][1]):
                         wire = self.find_wire(x.group(idx + 1))
+                        if wire is None:
+                            print(x.group(idx+1))
                         if (port == self.PortType.IN_DATA):
                             width = max(width, wire.width)
                             component.inputs.append(wire)
@@ -138,15 +141,38 @@ class NetlistParser:
                     next_wire_paths[idx].insert(0,wire)
                 paths.extend(next_wire_paths)
             return paths
-            
+
+    def divide_paths(self):
+        num_paths = len(self.paths)
+        for i in range(num_paths):
+            new_path = []
+            for item in self.paths[i]:
+                new_path.append(item)
+                if item.name == "REG":
+                    self.paths.append(new_path)
+                    new_path = [item]
+            self.paths[i] = new_path        
+        num_paths = len(self.paths)
+        for i in range(num_paths-1,-1,-1):
+            for j in range(i):
+                if len(self.paths[i]) == len(self.paths[j]):
+                    match = True
+                    for k in range(len(self.paths[i])):
+                        if self.paths[i][k] != self.paths[j][k]:
+                            match = False
+                            break
+                    if match:
+                        self.paths.pop(i)
+                    break                    
+
     def get_critical_path(self):
         self.critical_path = None
         self.critical_path_ns = 0
         component_critical_paths_ns = CriticalPaths().time_ns;
-        for (idx,path) in enumerate(self.paths):
+        for path in self.paths:
             path_latency = 0
-            for item in path:
-                if item.name in component_critical_paths_ns.keys():
+            for (idx,item) in enumerate(path):
+                if (item.name in component_critical_paths_ns.keys()) and (idx < (len(path) - 1)):
                     if item.width == 2:
                         path_latency = path_latency + component_critical_paths_ns[item.name][0]
                     elif item.width == 8:
@@ -160,7 +186,7 @@ class NetlistParser:
             if path_latency > self.critical_path_ns:
                 self.critical_path_ns = path_latency
                 self.critical_path = path                
-     
+
     def display_critical_path(self):
         for (idx,item) in enumerate(self.critical_path):
             print(item.name, end = '')
@@ -168,7 +194,7 @@ class NetlistParser:
                 print(' -> ', end = '')
             else:
                 print()
-        
+
 if __name__ == "__main__":
     parser = NetlistParser(sys.argv[1])
     print('\nCritical Path (ns): %.3f\n' % parser.critical_path_ns)

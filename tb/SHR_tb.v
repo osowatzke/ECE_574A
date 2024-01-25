@@ -34,11 +34,11 @@ module SHR_tb();
             state  <= A_ONLY;
         end
         else begin
+            valid <= 1;
             case (state)
                 A_ONLY : begin
                     a      = $urandom;
                     d_ref <= a;
-                    valid <= 1;
                     state <= SH_ONLY;
                 end
                 SH_ONLY : begin
@@ -46,7 +46,7 @@ module SHR_tb();
                     d_ref <= a >> sh_amt;
                     state <= A_AND_SH;
                 end
-                A_AND_SH : begin
+                default : begin
                     a      = $urandom;
                     sh_amt = $urandom_range(1,DATAWIDTH);
                     d_ref <= a >> sh_amt;

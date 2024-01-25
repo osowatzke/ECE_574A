@@ -6,7 +6,7 @@ module COMP(a,b,gt,lt,eq);
     input [DATAWIDTH-1:0] a;
     input [DATAWIDTH-1:0] b;
 
-    output gt,lt,eq;
+    output reg gt,lt,eq;
 
     always @(a,b) begin
         gt <= 0; lt <= 0; eq <= 0;

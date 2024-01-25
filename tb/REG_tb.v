@@ -11,9 +11,9 @@ module REG_tb();
     reg  valid;
     reg  err;
     
-    wire [DATAWIDTH-1:0] d;
-    wire [DATAWIDTH-1:0] q;
+    reg  [DATAWIDTH-1:0] d;
     reg  [DATAWIDTH-1:0] q_ref;
+    wire [DATAWIDTH-1:0] q_meas;
 
     initial begin
         valid <= 0;
@@ -24,19 +24,21 @@ module REG_tb();
     
     rst_gen #(.RESET_TIME(RESET_TIME)) rst_gen_i(rst);
     
-    inc_gen #(.DATAWIDTH(DATAWIDTH)) inc_gen_i(d,clk,rst);
-    
-    REG #(.DATAWIDTH(DATAWIDTH)) REG_i(q,d,clk,rst);
+    REG #(.DATAWIDTH(DATAWIDTH)) REG_i(q_meas,d,clk,rst);
     
     always @(posedge clk) begin
         valid       <= 1;
-        if (rst == 1)
+        if (rst == 1) begin
+            d       <= 0;
             q_ref   <= 0;
-        else
+        end
+        else begin
+            d       <= d + 1;
             q_ref   <= d;
-        if ((valid == 1) && (q != q_ref)) begin
+        end
+        if ((valid == 1) && (q_meas != q_ref)) begin
             err     <= 1;
-            $error("Error Detected at Time %t: Meas = %d, Meas=%d", $realtime, q, q_ref);
+            $error("Error Detected at Time %t: Meas = %d, Meas=%d", $realtime, q_meas, q_ref);
         end
     end
 endmodule

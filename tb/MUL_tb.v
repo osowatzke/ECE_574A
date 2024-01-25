@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module DIV_tb();
+module MUL_tb();
 
     parameter DATAWIDTH = 32;
     
@@ -13,8 +13,8 @@ module DIV_tb();
     
     reg  [DATAWIDTH-1:0] a;
     reg  [DATAWIDTH-1:0] b;
-    reg  [DATAWIDTH-1:0] qout_ref;
-    wire [DATAWIDTH-1:0] qout_meas;
+    reg  [DATAWIDTH-1:0] prodRef;
+    wire [DATAWIDTH-1:0] prodMeas;
     
     reg [1:0] state;
     reg valid;
@@ -28,41 +28,41 @@ module DIV_tb();
     
     always @(posedge clk) begin
         if (rst == 1) begin
-            a        <= 0;
-            b        <= 0;
-            qout_ref <= 0;
-            valid    <= 0;
-            state    <= INIT;
+            a       <= 0;
+            b       <= 0;
+            prodRef <= 0;
+            valid   <= 0;
+            state   <= INIT;
         end
         else begin
             valid   <= 1;
             case (state)
                 INIT : begin
-                    a        <= 1;
-                    b        <= 1;
-                    qout_ref <= 1;
-                    state    <= A_ONLY;
+                    a       <= 1;
+                    b       <= 1;
+                    prodRef <= 1;
+                    state   <= A_ONLY;
                 end
                 A_ONLY : begin
-                    a         = $urandom;
-                    qout_ref <= a;
-                    state    <= B_ONLY;
+                    a        = $urandom;
+                    prodRef <= a;
+                    state   <= B_ONLY;
                 end
                 B_ONLY : begin
-                    b         = $urandom;
-                    qout_ref <= a/b;
-                    state    <= A_AND_B;
+                    b        = $urandom;
+                    prodRef <= a*b;
+                    state   <= A_AND_B;
                 end
                 default : begin
-                    a         = $urandom;
-                    b         = $urandom;
-                    qout_ref <= a/b;
-                    state    <= A_AND_B;
+                    a        = $urandom;
+                    b        = $urandom;
+                    prodRef <= a*b;
+                    state   <= A_AND_B;
                 end
             endcase
         end
     end
     
-    DIV #(.DATAWIDTH(DATAWIDTH)) DIV_i(a,b,qout_meas);
-    error_monitor #(.DATAWIDTH(DATAWIDTH)) error_monitor_i(qout_meas,qout_ref,valid,err,clk,rst);
+    MUL #(.DATAWIDTH(DATAWIDTH)) MUL_i(a,b,prodMeas);
+    error_monitor #(.DATAWIDTH(DATAWIDTH)) error_monitor_i(prodMeas,prodRef,valid,err,clk,rst);
 endmodule

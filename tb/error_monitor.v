@@ -29,7 +29,7 @@ module error_monitor(measIn,refIn,validIn,errOut,clkIn,rstIn);
             if (validIn == 1) begin
                 if (measIn !== refIn) begin
                     errOut <= 1;
-                    $error("Error Detected at Time %t: Meas = %d, Meas=%d", $realtime, measIn, refIn);
+                    $error("Error Detected at Time %t: Meas = %d, Ref=%d", $realtime, measIn, refIn);
                 end
             end
         end

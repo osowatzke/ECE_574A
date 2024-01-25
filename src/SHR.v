@@ -8,7 +8,7 @@ module SHR(a,sh_amt,d);
 
     output reg [DATAWIDTH-1:0] d;
 
-    always @(a,b) begin
+    always @(a,sh_amt) begin
         d <= a >> sh_amt;
     end
 endmodule

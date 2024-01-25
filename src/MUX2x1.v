@@ -9,12 +9,6 @@ module MUX2x1(a,b,sel,d);
 
     output reg [DATAWIDTH-1:0] d;
 
-    always @(a,b,sel) begin
-        if (sel) begin
-            d <= a;
-        end
-        else begin
-            d <= b;
-        end
-    end
+    always @(a,b,sel)
+        d = sel ? b : a;
 endmodule

@@ -15,6 +15,6 @@ module circuit1(a, b, c, z, x);
         MUX2x1 #(.DATAWIDTH(8)) MUX2x1_1(e,d,g,z); // z = g ? d : e
         MUL #(.DATAWIDTH(16)) MUL_1(a, c, f); // f = a * c
         SUB #(.DATAWIDTH(16)) SUB_1(f, d, xwire); // xwire = f - d
-        ADD #(.DATAWIDTH(16)) ADD_3(x, 0, xwire); // x = xwire
+        ADD #(.DATAWIDTH(16)) ADD_3(xwire, 0, x); // x = xwire
         
 endmodule

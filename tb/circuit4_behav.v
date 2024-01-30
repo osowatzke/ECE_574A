@@ -1,7 +1,7 @@
 `timescale 1ns/1ns
 
 module circuit4_behav(a,b,c,z,x,clk,rst);
-    
+
     input             clk, rst;
     input      [63:0] a, b, c;
     output reg [31:0] z, x;
@@ -9,7 +9,7 @@ module circuit4_behav(a,b,c,z,x,clk,rst);
     wire              dLTe, dEQe;
     wire       [63:0] xrin, zrin;
     reg        [63:0] greg, hreg;
-    
+
     assign d = a + b;
     assign e = a + c;
     assign f = a - b;
@@ -23,4 +23,5 @@ module circuit4_behav(a,b,c,z,x,clk,rst);
     assign zrin = greg >> dEQe;
     always @(posedge clk) x <= rst ? 0 : xrin[31:0];
     always @(posedge clk) z <= rst ? 0 : zrin[31:0];
-endmodule 
+
+endmodule

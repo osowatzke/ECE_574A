@@ -1,8 +1,7 @@
 `timescale 1ns/1ns
 
-module ADD(a,b,sum);
+module ADD #(parameter DATAWIDTH = 32)(a, b, sum);
 
-    parameter DATAWIDTH = 32;
     input [DATAWIDTH-1:0] a;
     input [DATAWIDTH-1:0] b;
 

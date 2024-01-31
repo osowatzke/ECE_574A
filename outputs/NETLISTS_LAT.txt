@@ -1,4 +1,4 @@
-circuit1 : 18.565 EstimatedCriticalPath
+circuit1 : 18.565 ActualCriticalPath
 circuit2 : EstimatedCriticalPath ActualCriticalPath
 circuit3 : EstimatedCriticalPath ActualCriticalPath
 circuit4 : 21.022 ActualCriticalPath

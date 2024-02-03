@@ -95,6 +95,7 @@ class NetlistParser:
                 if x is not None:
                     inputs = []
                     width = 0
+                    out_width = 0
                     component = Component(name=name)
                     for (idx, port) in enumerate(self.__REGEX[name][1]):
                         wire = self.find_wire(x.group(idx + 1))
@@ -108,11 +109,15 @@ class NetlistParser:
                             component.inputs.append(wire)
                             wire.outputs.append(component)
                         elif (port == self.PortType.OUT_DATA):
+                            out_width = max(out_width, wire.width)
                             component.outputs.append(wire)
                             wire.inputs.append(component)
                         elif (port == self.PortType.OUT_CTRL):
                             component.outputs.append(wire)
                             wire.inputs.append(component)
+                    if (component.name == "MUL") and (out_width > width):
+                        print(f"\nResizing MUL component to match width of output {component.outputs[0].name}")
+                        width = out_width
                     component.width = width
                     self.components.append(component)
     
@@ -120,7 +125,7 @@ class NetlistParser:
         new_wires = []
         for wire in self.wires:
             if (len(wire.outputs) == 0) and (len(wire.inputs) != 0) and (wire.inputs[0].name != "REG"):
-                print(f"Adding implicit register for output {wire.name}")
+                print(f"\nAdding implicit register for output {wire.name}")
                 new_wire = Wire(name=wire.name, width=wire.width)
                 wire.name = wire.name + "wire"
                 component = Component(name="REG")

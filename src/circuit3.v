@@ -20,6 +20,13 @@ module circuit3(a, b, c, d, e, f, g, h, sa, avg, clk, rst);
     assign sa_32 = {{24{1'b0}}, sa};
     assign avg = avg_32[15:0];
 
+    // Making adder width equal to the maximum width of
+    // the inputs without considering the output width.
+    // This is consistent with the assignment description,
+    // but produces results inconsistent with the verilog
+    // implementation for ADD_1, ADD_2, ADD_3, ADD_4.
+    // Discussed this with Dr. Tosi, and he confirmed
+    // that this was the implementation that he wanted.
     ADD    #(.DATAWIDTH(16)) ADD_1(a, b, l00_16);                     // l00 = a + b
     ADD    #(.DATAWIDTH(16)) ADD_2(c, d, l01_16);                     // l01 = c + d
     ADD    #(.DATAWIDTH(16)) ADD_3(e, f, l02_16);                     // l02 = e + f

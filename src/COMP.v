@@ -8,13 +8,16 @@ module COMP(a,b,gt,lt,eq);
 
     output reg gt,lt,eq;
 
+    // Modified comparator to align with comments in sample behavioral netlist.
+    // Comparator sets gt = 1 when b > a and lt = 1 when b < a.
+    // Validated behavior with Dr. Tosi during office hours.
     always @(a,b) begin
         gt <= 0; lt <= 0; eq <= 0;
         
-        if (a>b) begin
+        if (b>a) begin
             gt <= 1;
         end
-        else if (a<b) begin
+        else if (b<a) begin
             lt <= 1;
         end
         else begin

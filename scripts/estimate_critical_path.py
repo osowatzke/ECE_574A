@@ -7,7 +7,7 @@ import sys
 class CriticalPaths:
     def __init__(self):
         path_this_file = os.path.dirname(os.path.abspath(__file__))
-        critical_path_file = os.path.join(path_this_file,'..','outputs','DCPL_LAT.txt')
+        critical_path_file = os.path.join(path_this_file,'..','outputs','DPCL_LAT.txt')
         f = open(critical_path_file,'r')
         lines = f.readlines()
         f.close()

@@ -19,18 +19,22 @@ module circuit4(a,b,c,z,x,clk,rst);
     assign x = x_64[31:0];
     assign z = z_64[31:0];
 
-    ADD    #(.DATAWIDTH(64)) ADD_0(a, b, d);
-    ADD    #(.DATAWIDTH(64)) ADD_1(a, c, e);
-    SUB    #(.DATAWIDTH(64)) ADD_2(a, b, f);
-    COMP   #(.DATAWIDTH(64)) COMP_0(d, e, , ,dEQe);
-    COMP   #(.DATAWIDTH(64)) COMP_1(d, e, ,dLTe, );
-    MUX2x1 #(.DATAWIDTH(64)) MUX2x1_0(e, d, dLTe, g);
-    MUX2x1 #(.DATAWIDTH(64)) MUX2x1_1(f, g, dEQe, h);
-    REG    #(.DATAWIDTH(64)) REG_0(greg, g, clk, rst);
-    REG    #(.DATAWIDTH(64)) REG_1(hreg, h, clk, rst);
-    SHL    #(.DATAWIDTH(64)) SHL_0(hreg, dLTe_64, xrin);
-    SHR    #(.DATAWIDTH(64)) SHR_0(greg, dEQe_64, zrin);
-    REG    #(.DATAWIDTH(64)) REG_2(x_64, xrin, clk, rst);
-    REG    #(.DATAWIDTH(64)) REG_3(z_64, zrin, clk, rst);
+    ADD    #(.DATAWIDTH(64)) ADD_1(a, b, d);                // d = a + b    
+    ADD    #(.DATAWIDTH(64)) ADD_2(a, c, e);                // e = a + c 
+    SUB    #(.DATAWIDTH(64)) ADD_3(a, b, f);                // f = a - b 
+    COMP   #(.DATAWIDTH(64)) COMP_1(d, e, , ,dEQe);         // dEQe = d == e
+    
+    // Using gt output of modified comparator for d < e.
+    // This is consistent with comments in sample
+    // behavioral netlist.
+    COMP   #(.DATAWIDTH(64)) COMP_2(d, e, dLTe, , );        // dLTe = d < e
+    MUX2x1 #(.DATAWIDTH(64)) MUX2x1_1(e, d, dLTe, g);       // g = dLTe ? d : e
+    MUX2x1 #(.DATAWIDTH(64)) MUX2x1_2(f, g, dEQe, h);       // h = dEQe ? g : f 
+    REG    #(.DATAWIDTH(64)) REG_1(greg, g, clk, rst);      // greg = g
+    REG    #(.DATAWIDTH(64)) REG_2(hreg, h, clk, rst);      // hreg = h
+    SHL    #(.DATAWIDTH(64)) SHL_1(hreg, dLTe_64, xrin);    // xrin = hreg << dLTe
+    SHR    #(.DATAWIDTH(64)) SHR_1(greg, dEQe_64, zrin);    // zrin = greg >> dEQe
+    REG    #(.DATAWIDTH(64)) REG_3(x_64, xrin, clk, rst);   // x = xrin
+    REG    #(.DATAWIDTH(64)) REG_4(z_64, zrin, clk, rst);   // z = zrin
 
 endmodule

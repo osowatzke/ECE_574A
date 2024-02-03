@@ -4,8 +4,8 @@ module COMP_tb();
     
     localparam CLK_PERIOD = 10;
     localparam RESET_TIME = 100;
-    localparam A_ONLY     = 2'b00;
-    localparam B_ONLY     = 2'b01;
+    localparam B_ONLY     = 2'b00;
+    localparam A_ONLY     = 2'b01;
     localparam A_AND_B    = 2'b10;
     
     reg [DATAWIDTH-1:0] a;
@@ -37,31 +37,31 @@ module COMP_tb();
             lt_ref  <= 0;
             eq_ref  <= 0;
             valid   <= 0;
-            state   <= A_ONLY;
+            state   <= B_ONLY;
         end
         else begin
             valid   <= 1;
             case (state)
-                A_ONLY : begin
-                    a       = $urandom;
-                    gt_ref <= (a > 0);
-                    lt_ref <= 0;
-                    eq_ref <= (a == 0);
-                    state  <= B_ONLY;
-                end
                 B_ONLY : begin
                     b       = $urandom;
-                    gt_ref <= (a > b);
-                    lt_ref <= (a < b);
-                    eq_ref <= (a == b);
+                    gt_ref <= (b > 0);
+                    lt_ref <= 0;
+                    eq_ref <= (b == 0);
+                    state  <= A_ONLY;
+                end
+                A_ONLY : begin
+                    b       = $urandom;
+                    gt_ref <= (b > a);
+                    lt_ref <= (b < a);
+                    eq_ref <= (b == a);
                     state  <= A_AND_B;
                 end
                 default : begin
                     a       = $urandom;
                     b       = $urandom;
-                    gt_ref <= (a > b);
-                    lt_ref <= (a < b);
-                    eq_ref <= (a == b);
+                    gt_ref <= (b > a);
+                    lt_ref <= (b < a);
+                    eq_ref <= (b == a);
                     state  <= A_AND_B;
                 end
             endcase

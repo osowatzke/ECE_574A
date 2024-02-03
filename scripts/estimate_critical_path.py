@@ -66,6 +66,7 @@ class NetlistParser:
         f.close()
         self.parse_wires()
         self.parse_components()
+        self.add_implicit_output_registers()
         self.get_paths()
         self.divide_paths()
         self.get_critical_path()
@@ -115,6 +116,22 @@ class NetlistParser:
                     component.width = width
                     self.components.append(component)
     
+    def add_implicit_output_registers(self):
+        new_wires = []
+        for wire in self.wires:
+            if (len(wire.outputs) == 0) and (len(wire.inputs) != 0) and (wire.inputs[0].name != "REG"):
+                print(f"Adding implicit register for output {wire.name}")
+                new_wire = Wire(name=wire.name, width=wire.width)
+                wire.name = wire.name + "wire"
+                component = Component(name="REG")
+                component.inputs.append(wire)
+                component.outputs.append(new_wire)
+                wire.outputs.append(component)
+                self.components.append(component)
+                new_wire.inputs.append(component)
+                new_wires.append(new_wire)
+        self.wires.extend(new_wires)
+
     def get_inputs(self):
         inputs = []
         for wire in self.wires:

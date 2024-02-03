@@ -9,7 +9,7 @@ module circuit1(a, b, c, z, x, clk, rst);
         output [15:0] x;
 
         wire   g;
-        wire   [ 7:0] d, e;
+        wire   [ 7:0] d, e, zwire;
         wire   [15:0] f;
         wire   [15:0] xwire;
         wire   [15:0] a_16, c_16, d_16;
@@ -24,9 +24,16 @@ module circuit1(a, b, c, z, x, clk, rst);
         // Using modified comparator and lt output to be
         // consistent with comments in sample behavioral netlist.
         COMP   #(.DATAWIDTH( 8)) COMP_1(d, e, , g, );               // g = d > e
-        MUX2x1 #(.DATAWIDTH( 8)) MUX2x1_1(e, d, g, z);              // z = g ? d : e
+        MUX2x1 #(.DATAWIDTH( 8)) MUX2x1_1(e, d, g, zwire);          // z = g ? d : e
+        
+        // Adding register for output z even though there was
+        // no explicit line in the behavioral netlist. This
+        // matches assignment description, which says that each
+        // output is implicitly associated with a register (REG)
+        // component. Also, confirmed this with Dr. Tosi.
+        REG    #(.DATAWIDTH( 8)) REG_1(z, zwire, clk, rst);
         MUL    #(.DATAWIDTH(16)) MUL_1(a_16, c_16, f);              // f = a * c
         SUB    #(.DATAWIDTH(16)) SUB_1(f, d_16, xwire);             // xwire = f - d
-        REG    #(.DATAWIDTH(16)) REG_1(x, xwire, clk, rst);         // x = xwire
+        REG    #(.DATAWIDTH(16)) REG_2(x, xwire, clk, rst);         // x = xwire
 
 endmodule

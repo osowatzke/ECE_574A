@@ -32,6 +32,13 @@ module circuit1(a, b, c, z, x, clk, rst);
         // output is implicitly associated with a register (REG)
         // component. Also, confirmed this with Dr. Tosi.
         REG    #(.DATAWIDTH( 8)) REG_1(z, zwire, clk, rst);
+        
+        // Making multiplier width equal to the maximum width
+        // of the inputs and outputs. This is different from
+        // the assignment description, but should provide
+        // results consistent with the verilog implementation
+        // of f = a * c. Discussed this with Dr. Tosi and
+        // he aggreed with our implementation.
         MUL    #(.DATAWIDTH(16)) MUL_1(a_16, c_16, f);              // f = a * c
         SUB    #(.DATAWIDTH(16)) SUB_1(f, d_16, xwire);             // xwire = f - d
         REG    #(.DATAWIDTH(16)) REG_2(x, xwire, clk, rst);         // x = xwire

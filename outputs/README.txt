@@ -11,10 +11,4 @@
     xc7a100tcsg324-1
 
 4)  Method Used to Calculate Critical Path
-    We listed the paths in our circuit from input to register, register to register,
-    and output to register. For each of these paths we notated the data components
-    that the signal had to pass through. We only considered registers at the start
-    of paths, not those at the end of paths. Then, using the critical paths of
-    each of the datapath components we were able to estimate a latency for each
-    path. Finally, we selected the path with the largest latency and estimated
-    the critical path as its latency.
+    After the datapath components were instantiated to create the circuit module, we identified interdependencies between the components by analyzing the port declarations of the instances. By doing so, we were able to infer all possible timing paths (i.e., in-to-reg, reg-to-reg and reg-to-out paths) in our circuit. For each of the paths, we noted the type and datawidth of the datapath components that the signal had to pass through. For reg-to-reg paths, we considered the launch register and any combinational logic between the launch and capture register but ignored the capture register itself. Next, we used relevant data from part 2 to estimate a latency for each path. Finally, we compared the latency of each path and asserted the path with largest latency as the critical path of the circuit.

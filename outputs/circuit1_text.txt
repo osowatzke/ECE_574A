@@ -1,5 +1,8 @@
-The estimated critical path is highlighted in blue, and the actual critical path is highlighted in red.
+The estimated critical path is highlighted in blue, and the actual critical path is highlighted in red. The critical path of each datapath component is also
+annotated in the schematic.
 
-Using the technique listed in the README, we estimated that the critical path would be 6.384 ns + 6.820 ns + 5.361 ns = 18.565 ns.
-
-The actual critical path was 7.646 ns.
+Using the technique listed in the README, we estimated that the critical path would be 6.384 ns + 6.820 ns + 5.361 ns = 18.565 ns. The actual
+critical path was 7.646 ns.
+ 
+The estimated critical path differed from the actual critical path because Vivado added IBUFs/OBUFs to each of our datapath components when they
+were individually synthesized. This increased the critical path measurement for each component and biased the overall estimate.

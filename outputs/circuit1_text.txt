@@ -5,4 +5,4 @@ Using the technique listed in the README, we estimated that the critical path wo
 critical path was 7.646 ns.
  
 The estimated critical path differed from the actual critical path because Vivado added IBUFs/OBUFs to each of our datapath components when they
-were individually synthesized. This increased the critical path measurement for each component and biased the overall estimate.
+were individually synthesized. This increased the critical path measurement for each component and affected the overall estimate.

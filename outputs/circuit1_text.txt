@@ -1,10 +1,5 @@
 The estimated critical path is highlighted in blue, and the actual critical path is highlighted in red.
 
-Using the technique listed in the README, we estimated that the critical path would be from a to REG_1. Using the latencies from part 2,
-we specifically estimated that it would go from a to ADD_1 in 6.384 ns, from ADD_1 to COMP_1 in 6.820 ns, from COMP_1 to MUX2x1_1 in
-5.361 ns, and from MUX2x1_1 to REG_1 (time not counted). This led to an estimated critical path of 6.384 ns + 6.820 ns + 5.361 ns = 18.565 ns.
-Due to vivado optimizations, this path cannot be easily traced. To highlight the path in our schematic, we used Vivado to report timing
-paths solely from a to REG_1 and selected the worst one.
+Using the technique listed in the README, we estimated that the critical path would be 6.384 ns + 6.820 ns + 5.361 ns = 18.565 ns.
 
-The actual critical path was 7.464ns and went from a to REG_2. This is significantly shorter than the estimated critical path of 18.565 ns.
-We believe that the IBUF/OBUF components added when synthesizing the datapath components resulted in inflated critical path estimates.
+The actual critical path was 7.646 ns.

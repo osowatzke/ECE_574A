@@ -18,4 +18,5 @@
     register and any combinational logic between the launch and capture registers but ignored the capture register itself. Next,
     we used relevant data from part 2 to estimate a latency for each path. Finally, we compared the latency of each path and
     asserted the path with largest latency as the estimated critical path. We also compared the estimated critical path to the
-    actual critical path in Vivado. For visualization, we set the "flatten_hierarchy" option to "none". This did increase the critical path of the optimized circuit, but enabled us to more easily trace the estimated and actual critical paths.
+    actual critical path in Vivado. For visualization, we set the "flatten_hierarchy" option to "none". This did increase the
+    critical path of the optimized circuit, but enabled us to more easily trace the estimated and actual critical paths.
